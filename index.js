@@ -26,6 +26,33 @@ server.get("/api/projects/:id", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
+server.get("/api/projects/:id/actions", async (req, res) => {
+  try {
+    const actions = await db("actions");
+    const project = await db("projects");
+    // const project = await Projects.projectByIds(req.params.id);
+    res.status(200).json({ project, actions });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+server.get("/api/actions", async (req, res) => {
+  try {
+    const actions = await Projects.getActions();
+    res.status(200).json(actions);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+server.get("/api/actions/:id", async (req, res) => {
+  try {
+    const action = await Projects.actionById(req.params.id);
+    res.status(200).json(action);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 server.post("/api/projects", async (req, res) => {
   try {
     const project = await Projects.addProject(req.body);
@@ -33,6 +60,16 @@ server.post("/api/projects", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error adding project"
+    });
+  }
+});
+server.post("/api/actions", async (req, res) => {
+  try {
+    const action = await Projects.addAction(req.body);
+    res.status(201).json(action);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error adding action"
     });
   }
 });
