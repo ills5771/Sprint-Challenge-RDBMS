@@ -29,9 +29,8 @@ server.get("/api/projects/:id", async (req, res) => {
 
 server.get("/api/projects/:id/actions", async (req, res) => {
   try {
-    const actions = await db("actions");
-    const project = await db("projects");
-    // const project = await Projects.projectByIds(req.params.id);
+    const actions = await db("actions").where({ project_id: req.params.id });
+    const project = await db("projects").where({ id: req.params.id });
     res.status(200).json({ project, actions });
   } catch (error) {
     res.status(500).json(error);
