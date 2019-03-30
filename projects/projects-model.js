@@ -6,19 +6,11 @@ module.exports = {
   addProject,
   getActions,
   actionById,
-  addAction,
-  projectByIds
+  addAction
 };
 
 function getProjects() {
   return db("projects");
-}
-
-function projectByIds(projectId) {
-  return db("projects as p")
-    .innerJoin("actions as a", "a.id", "a.project_id")
-    .select("p.id", "p.name", "a.id", "a.notes", "a.description", "a.completed")
-    .where("a.project_id", projectId);
 }
 
 function projectById(id) {
