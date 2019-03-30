@@ -28,14 +28,20 @@ server.get("/api/projects/:id", async (req, res) => {
 });
 
 server.get("/api/projects/:id/actions", async (req, res) => {
+  const { id } = req.params;
   try {
-    const actions = await db("actions").where({ project_id: req.params.id });
-    const project = await db("projects").where({ id: req.params.id });
-    res.status(200).json({ project, actions });
+    const actions = await db("actions as a").where({ "a.project_id": id });
+    const projects = await db("projects as p")
+      .where({ "p.id": id })
+      .first();
+    res.status(200).json({ ...projects, actions });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({
+      message: "Error retrieving actions for this project"
+    });
   }
 });
+
 server.get("/api/actions", async (req, res) => {
   try {
     const actions = await Projects.getActions();
